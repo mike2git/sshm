@@ -118,6 +118,14 @@ ProcessArguments $*
 case ${MOUNT_COMMAND} in
     m|mount)
         if [ -z "$MOUNT_OPTIONS" ]; then
+            # Testez l'existence du répertoire
+            if [ ! -d "${MOUNT_POINT}" ]; then
+                # Le répertoire n'existe pas, alors nous le créons
+                mkdir -p "${MOUNT_POINT}"
+                echo "Répertoire créé : ${MOUNT_POINT}"
+            else
+                echo "Le répertoire existe : ${MOUNT_POINT}"
+            fi
             echo ${MOUNT_PASSWORD} | sshfs ${MOUNT_USER_AT_HOST}:${MOUNT_PATH} ${MOUNT_POINT} -o password_stdin
         else
             echo ${MOUNT_PASSWORD} | sshfs ${MOUNT_USER_AT_HOST}:${MOUNT_PATH} ${MOUNT_POINT} -o password_stdin,${MOUNT_OPTIONS}
