@@ -5,7 +5,7 @@
 MOUNT_OPTIONS=
 MOUNT_POINT=
 BASE_MOUNT_POINT="/home/seror/sshfs"
-MOUNT_PATH=
+MOUNT_PATH="./"
 MOUNT_USER_AT_HOST=
 MOUNT_PASSWORD=
 MOUNT_COMMAND=mount
@@ -63,6 +63,7 @@ function ProcessArguments() {
                 if [ $# -eq 0 -o "${1:0:1}" = "-" ]; then
                     Die "The ${opt} option requires an argument."
                 fi
+                MOUNT_POINT_OPTION=1
                 export MOUNT_POINT=$1
                 shift
                 ;;
@@ -97,16 +98,19 @@ function ProcessArguments() {
     done
     
     export MOUNT_COMMAND=${ARGV[0]}
+    # split into pieces "user@host[:mount_path]"
     if [[ ${ARGV[1]} == *:* ]]; then
         argument1=${ARGV[1]}
         export MOUNT_USER_AT_HOST=${argument1%%:*}
         export MOUNT_PATH=${argument1#*:}
-        export MOUNT_POINT="$BASE_MOUNT_POINT/${MOUNT_USER_AT_HOST}"
-        echo "variable : $argument1"
-        echo "Mount_user_at_host : $MOUNT_USER_AT_HOST"
-        echo "Mount_path : $MOUNT_PATH"
+        if [[ ${MOUNT_POINT_OPTION} -ne 1 ]]; then
+            export MOUNT_POINT="$BASE_MOUNT_POINT/${MOUNT_USER_AT_HOST}"
+        fi
     else
-    export MOUNT_POINT="$BASE_MOUNT_POINT/${ARGV[1]}"
+        export MOUNT_USER_AT_HOST=${ARGV[1]}
+        if [[ ${MOUNT_POINT_OPTION} -ne 1 ]]; then
+            export MOUNT_POINT="$BASE_MOUNT_POINT/${ARGV[1]}"
+        fi
     fi
 }
 
@@ -132,6 +136,8 @@ case ${MOUNT_COMMAND} in
         ;;
     u|unmount)
         fusermount -u ${MOUNT_POINT}
+        echo "ls -l ${MOUNT_POINT}"
+        ls -l ${MOUNT_POINT}
         ;;
     *)
         Die "${MOUNT_COMMAND} is an unknown command."
