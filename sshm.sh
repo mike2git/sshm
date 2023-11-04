@@ -2,7 +2,7 @@
 # Script sshm
 
 # default settings
-MOUNT_OPTIONS=
+MOUNT_OPTIONS="transform_symlinks,idmap=user -C"
 MOUNT_POINT=
 BASE_MOUNT_POINT="/home/seror/sshfs"
 MOUNT_PATH="./"
@@ -143,13 +143,3 @@ case ${MOUNT_COMMAND} in
         Die "${MOUNT_COMMAND} is an unknown command."
         ;;
 esac
-
-#################################################
-
-# export USER_AT_HOST=$1
-# export USER_PATH=$2
-# Make the directory where the remote filesystem will be mounted
-# mkdir -p "$HOME/sshfs/$USER_AT_HOST"
-# Mount the remote filesystem
-# echo sshfs "$USER_AT_HOST:$USER_PATH" "$HOME/sshfs/$USER_AT_HOST" -p 22 -o transform_symlinks -o idmap=user -C
-# sshfs "$USER_AT_HOST:$USER_PATH" "$HOME/sshfs/$USER_AT_HOST" -p 22 -o transform_symlinks -o idmap=user -C
