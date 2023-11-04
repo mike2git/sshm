@@ -19,7 +19,7 @@ PACKAGE=`basename $0`
 function Usage()
 {
     cat <<-ENDOFMESSAGE
-$PACKAGE - mount or umount filesystem over ssh on /home/seror/user@host
+$PACKAGE - mount or umount filesystem over ssh on /home/seror/sshfs/user@host
 $PACKAGE [command] [user@host[:mount_path]] [options]
 arguments:
 command - the command to execute, mount / m or unmount / u
@@ -27,7 +27,7 @@ user@host:mount_path - the user, the host and the path on the remote server to m
 
 options:
 -h, --help show brief help
--m, --mountpoint MOUNT_POINT the local mount point
+-m, --mountpoint MOUNT_POINT the local mount point other than default (/home/seror/sshfs/user@host)
 -p, --password MOUNT_PASSWORD the password for the ssh login
 -o, --options MOUNT_OPTIONS the options string to pass to fusermount
 
@@ -118,13 +118,12 @@ ProcessArguments $*
 case ${MOUNT_COMMAND} in
     m|mount)
         if [ -z "$MOUNT_OPTIONS" ]; then
-            # Testez l'existence du répertoire
+            # Create MOUNT_POINT directory if doesn't exist
             if [ ! -d "${MOUNT_POINT}" ]; then
-                # Le répertoire n'existe pas, alors nous le créons
                 mkdir -p "${MOUNT_POINT}"
-                echo "Répertoire créé : ${MOUNT_POINT}"
+                echo "Directory created : ${MOUNT_POINT}"
             else
-                echo "Le répertoire existe : ${MOUNT_POINT}"
+                echo "Directory already created : ${MOUNT_POINT}"
             fi
             echo ${MOUNT_PASSWORD} | sshfs ${MOUNT_USER_AT_HOST}:${MOUNT_PATH} ${MOUNT_POINT} -o password_stdin
         else
