@@ -1,7 +1,7 @@
-# sshm
+# sshmp
   
-sshm - mount or umount filesystem over ssh on /home/seror/user@host  
-sshm [command] [user@host[:mount_path]] [options]  
+sshmp - mount or umount filesystem over ssh on /home/seror/user@host  
+sshmp [command] [user@host[:mount_path]] [options]  
   
 arguments:  
 command - the command to execute, mount / m or unmount / u  
@@ -14,8 +14,8 @@ options:
 -o, --options MOUNT_OPTIONS the options string to pass to fusermount  
 
 Examples :  
-sshm m r_pse@cbs_app_dev:/home/r_pse  
-sshm u r_pse@cbs_app_dev  
+sshmp m r_pse@cbs_app_dev:/home/r_pse  
+sshmp u r_pse@cbs_app_dev  
   
 NOTE: 
 This command requires the fuse-sshfs package.  
