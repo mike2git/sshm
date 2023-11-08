@@ -121,14 +121,15 @@ ProcessArguments $*
 #process command
 case ${MOUNT_COMMAND} in
     m|mount)
+        # Create MOUNT_POINT directory if doesn't exist
+        if [ ! -d "${MOUNT_POINT}" ]; then
+            mkdir -p "${MOUNT_POINT}"
+            echo "Directory created : ${MOUNT_POINT}"
+        else
+            echo "Directory already created : ${MOUNT_POINT}"
+        fi
+        # Insert MOUNT_OPTIONS if they exist
         if [ -z "$MOUNT_OPTIONS" ]; then
-            # Create MOUNT_POINT directory if doesn't exist
-            if [ ! -d "${MOUNT_POINT}" ]; then
-                mkdir -p "${MOUNT_POINT}"
-                echo "Directory created : ${MOUNT_POINT}"
-            else
-                echo "Directory already created : ${MOUNT_POINT}"
-            fi
             echo ${MOUNT_PASSWORD} | sshfs ${MOUNT_USER_AT_HOST}:${MOUNT_PATH} ${MOUNT_POINT} -o password_stdin
         else
             echo ${MOUNT_PASSWORD} | sshfs ${MOUNT_USER_AT_HOST}:${MOUNT_PATH} ${MOUNT_POINT} -o password_stdin,${MOUNT_OPTIONS}
